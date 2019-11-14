@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Count Date</title>
+  </head>
+  <body>
+    <div class="app"></div>
+  </body>
+  <script>
+    const start_date = "2019-09-15T00:00:00.000+09:00";
+    const diff_ms = Date.now() - new Date(start_date).getTime();
+    const diff_date = Math.ceil(diff_ms / (24 * 60 * 60 * 1000));
+    const diff_date_hex = diff_date.toString(16).toUpperCase();
+
+    document.querySelector(".app").innerHTML = diff_date_hex;
+  </script>
+</html>
