@@ -5,16 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Count Date</title>
+    <style>
+      .app {
+        width: 100%;
+
+        overflow: auto;
+      }
+
+      .row {
+        width: 100%;
+        height: 2.6rem;
+
+        display: flex;
+        align-items: center;
+
+        overflow: visible;
+      }
+
+      .row .name {
+        width: 12rem;
+        min-width: 12rem;
+      }
+    </style>
   </head>
   <body>
-    <div class="app"></div>
+    <div class="app">
+      <div class="row start_date">
+        <div class="name">
+          START_DATE
+        </div>
+        <div class="value"></div>
+      </div>
+      <div class="row current_date">
+        <div class="name">
+          CURRENT_DATE
+        </div>
+        <div class="value"></div>
+      </div>
+      <div class="row decimal_count">
+        <div class="name">
+          DECIMAL_COUNT
+        </div>
+        <div class="value"></div>
+      </div>
+      <div class="row hexadecimal_count">
+        <div class="name">
+          HEXADECIMAL_COUNT
+        </div>
+        <div class="value"></div>
+      </div>
+    </div>
   </body>
   <script>
-    const start_date = "2019-09-15T00:00:00.000+09:00";
-    const diff_ms = Date.now() - new Date(start_date).getTime();
-    const diff_date = Math.ceil(diff_ms / (24 * 60 * 60 * 1000));
-    const diff_date_hex = diff_date.toString(16).toUpperCase();
+    const toDayString = day_num => {
+      switch (day_num) {
+        case 1:
+          return "월";
+        case 2:
+          return "화";
+        case 3:
+          return "수";
+        case 4:
+          return "목";
+        case 5:
+          return "금";
+        case 6:
+          return "토";
+        default:
+          return "일";
+      }
+    };
+    const addPaddingLeftZero = num => (num < 10 ? `0${num}` : `${num}`);
+    const toLocalDateString = d => {
+      const year = d.getFullYear();
+      const month = addPaddingLeftZero(d.getMonth() + 1);
+      const date = addPaddingLeftZero(d.getDate());
+      const day = toDayString(d.getDay());
 
-    document.querySelector(".app").innerHTML = diff_date_hex;
+      return `${year}년 ${month}월 ${date}일 ${day}요일`;
+    };
+    const getDiffMs = (d1, d2) => Math.abs(d1.getTime() - d2.getTime());
+    const toHexString = num => `0x${num.toString(16).toUpperCase()}`;
+    const msToDate = ms => Math.ceil(ms / (24 * 60 * 60 * 1000));
+
+    const setInnerHTML = (sel, value) => {
+      const el = document.querySelector(sel);
+      if (!el) return;
+
+      el.innerHTML = value;
+      return el;
+    };
+
+    const START_DATE = "2019-09-15T00:00:00.000+09:00";
+
+    const startDate = new Date(START_DATE);
+    const startDateString = toLocalDateString(startDate);
+    const currentDate = new Date();
+    const currentDateString = toLocalDateString(currentDate);
+    const diffMs = getDiffMs(startDate, currentDate);
+    const diffDate = msToDate(diffMs);
+    const diffDateHex = toHexString(diffDate);
+
+    setInnerHTML(".start_date .value", startDateString);
+    setInnerHTML(".current_date .value", currentDateString);
+    setInnerHTML(".decimal_count .value", diffDate);
+    setInnerHTML(".hexadecimal_count .value", diffDateHex);
   </script>
 </html>
